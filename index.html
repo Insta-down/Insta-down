@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Instagram Video Downloader</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #020024, #090979, #00d4ff);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .header {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px cyan, 0 0 30px blue;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px cyan, 0 0 20px blue;
+            }
+            to {
+                text-shadow: 0 0 20px cyan, 0 0 40px blue;
+            }
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(15px);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff00ff, #ff5500);
+            border: none;
+            padding: 14px 24px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(255, 85, 0, 0.5);
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #ff5500, #ff00ff);
+            transform: scale(1.05);
+        }
+
+        .downloading {
+            display: none;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #00ffcc;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .video-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        video {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.4);
+        }
+
+        .download-link {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 14px 24px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.5);
+            transition: 0.3s;
+        }
+
+        .download-link:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            margin-top: 50px;
+            font-size: 16px;
+            opacity: 0.7;
+        }
+
+        .footer span {
+            color: cyan;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">🔥 Instagram Video Downloader 🚀</div>
+
+    <div class="container">
+        <input type="text" id="videoUrl" placeholder="Paste Instagram Reel URL here...">
+        <button class="btn" onclick="downloadVideo()">🚀 Download Now</button>
+        <div class="downloading" id="downloadingText">📥 Downloading...</div>
+        <div id="result" class="video-container"></div>
+    </div>
+
+    <div class="footer">
+        🔥 Made with ❤️ | Keep Downloading & Enjoy!
+    </div>
+
+    <script>
+        async function downloadVideo() {
+            let url = document.getElementById("videoUrl").value;
+            if (!url) {
+                alert("Please enter a valid Instagram video URL!");
+                return;
+            }
+
+            document.getElementById("downloadingText").style.display = "block";
+
+            const options = {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-host': 'instagram-reels-downloader-api.p.rapidapi.com',
+                    'x-rapidapi-key': 'c7f3b290e8msh708966e9e371e4ap15cc6bjsn5f6b41b8f130'
+                }
+            };
+
+            try {
+                let response = await fetch(`https://instagram-reels-downloader-api.p.rapidapi.com/download?url=${encodeURIComponent(url)}`, options);
+                let data = await response.json();
+
+                document.getElementById("downloadingText").style.display = "none";
+
+                if (data && data.video) {
+                    document.getElementById("result").innerHTML = `
+                        <video controls>
+                            <source src="${data.video}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <br>
+                        <a href="${data.video}" download="InstagramVideo.mp4" class="download-link">⬇️ Download Video</a>
+                    `;
+                    document.getElementById("result").style.display = "block";
+                } else {
+                    alert("❌ Failed to fetch video. Try again.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("⚠️ Error fetching video.");
+            }
+        }
+    </script>
+
+</body>
+</html>
